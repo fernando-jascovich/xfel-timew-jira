@@ -2,6 +2,7 @@ PATH
   remote: .
   specs:
     xfel-timew-jira (0.1.0)
+      terminal-table (~> 1.8.0)
 
 GEM
   remote: https://rubygems.org/
@@ -21,6 +22,9 @@ GEM
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
     rspec-support (3.9.3)
+    terminal-table (1.8.0)
+      unicode-display_width (~> 1.1, >= 1.1.1)
+    unicode-display_width (1.7.0)
 
 PLATFORMS
   ruby

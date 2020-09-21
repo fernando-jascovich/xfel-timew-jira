@@ -1,31 +1,24 @@
-#!/usr/bin/env ruby
 # frozen_string_literal: true
 
-require 'json'
 require 'date'
+require 'json'
+require_relative 'jira'
+require_relative 'table'
 
 module Xfel
   module Timew
+    # Main entry point for TimeWarrior report
     class Report
       def initialize
-        out = {}
+        table = Table.new
         read.each do |x|
           worklog = convert(x)
           next if worklog.nil?
 
-          sync(worklog)
-          k = worklog[:project]
-          unless out.key?(k)
-            out[k] = {}
-          end
-
-          unless out[k][worklog[:key]]
-            out[k][worklog[:key]] = 0
-          end
-
-          out[k][worklog[:key]] += worklog[:duration]
+          Jira.new(worklog)
+          table.add(worklog)
         end
-        table(out)
+        table.render
       end
 
       def read
@@ -61,45 +54,6 @@ module Xfel
         duration = finish.to_time.to_i - start.to_time.to_i
         project = project_from_key(key)
         { project: project, key: key, start: start, duration: duration }
-      end
-
-      def sync(worklog)
-        jira_host = ''
-        jira_user = ''
-        jira_pass = ''
-        vars = {
-          notifyUsers: false,
-          adjustEstimate: 'leave',
-          overrideEditableFlag: true
-        }
-        body = {
-          comment: '',
-          started: worklog[:start],
-          timeSpentSeconds: worklog[:duration]
-        }
-        url = "#{jira_host}/rest/api/3/issue/#{worklog[:key]}/worklog"
-        puts "Should sync: #{url}"
-      end
-
-      def col(text, fill = ' ')
-        col_width = 20
-        "| #{text.ljust(col_width, fill)} "
-      end
-
-      def table(data)
-        puts col('Project') + col('Hours') + col('Total')
-        puts col('', '-') + col('', '-') + col('', '-')
-        data.each do |project, tickets|
-          puts col(project)
-          total = 0
-          tickets.each do |key, duration|
-            k = "|--#{key}"
-            hours = (duration.to_f / 60 / 60).round(1)
-            total += hours
-            puts "#{col(k)}#{col(hours.to_s)}"
-          end
-          puts col('') + col('') + col(total.to_s)
-        end
       end
     end
   end

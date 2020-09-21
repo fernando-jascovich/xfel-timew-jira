@@ -13,13 +13,10 @@ Gem::Specification.new do |spec|
   DESCRIPTION
   spec.homepage = 'https://github.com/fernando-jascovich/xfel-timew-jira'
   spec.license = 'MIT'
-  spec.files = [
-    'lib/xfel_timew_jira.rb',
-    'lib/xfel/timew/version.rb',
-    'lib/xfel/timew/report.rb'
-  ]
+  spec.files = Dir['lib/**/*']
   spec.add_development_dependency 'bundler', '~> 2.1.4'
   spec.add_development_dependency 'rake', '~> 10.0'
   spec.add_development_dependency 'rspec', '~> 3.0'
+  spec.add_dependency 'terminal-table', '~> 1.8.0'
   spec.required_ruby_version = '>= 2.6'
 end
