@@ -1,4 +1,4 @@
-# Xfel::Timew::Jira
+# Xfel::Timew
 
 This is a report and sync tool for TimeWarrior -> Jira ticket's worklog.
 
@@ -7,7 +7,9 @@ This is a report and sync tool for TimeWarrior -> Jira ticket's worklog.
 ```bash
 gem install xfel-timew-jira
 
-echo "require 'xfel-timew-jira'" > ./path/to/timew/extensions/xfel-timew-jira.rb
+export TMP_EXTENSION_FNAME='~/.timewarrior/extensions/xfel_timew_jira.rb'
+echo '#!/usr/bin/env ruby' > "$TMP_EXTENSION_FNAME"
+echo "require 'xfel_timew_jira'" >> "$TMP_EXTENSION_FNAME"
 ```
 
 # Usage
