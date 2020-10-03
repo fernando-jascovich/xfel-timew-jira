@@ -1,4 +1,4 @@
-# frozen_string_literal: true
+# frozen_string_literal  true
 
 require 'date'
 require 'json'
@@ -35,6 +35,8 @@ module Xfel
       end
 
       def key_from_tags(tags)
+        return unless tags
+
         tags.each do |x|
           return x unless (x =~ /^[A-Z]+-[0-9]+$/).nil?
         end
@@ -50,10 +52,12 @@ module Xfel
         return unless key && item['end']
 
         start = DateTime.parse(item['start'])
+        st = start.strftime('%Y-%m-%dT%H:%M:%S.%L%z')
         finish = DateTime.parse(item['end'])
         duration = finish.to_time.to_i - start.to_time.to_i
         project = project_from_key(key)
-        { project: project, key: key, start: start, duration: duration }
+
+        { project: project, key: key, start: st, duration: duration }
       end
     end
   end
