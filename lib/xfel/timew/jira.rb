@@ -6,17 +6,28 @@ module Xfel
   module Timew
     # Class for REST interaction with Jira servers.
     class Jira
-      @@worklogs = {}
+      @worklogs = {}
+
+      class << self
+        attr_reader :worklogs
+      end
 
       def initialize(worklog)
         @start = worklog[:start]
         @duration = worklog[:duration]
         @key = worklog[:key]
-        @uri = "#{ENV['JIRA_HOST']}/rest/api/2/issue/#{@key}/worklog"
         return unless ENV['XFEL_JIRA_SYNC']
 
-        puts "Syncing worklogs for: #{worklog[:key]}"
-        sync
+        if ENV['JIRA_HOST'] && ENV['JIRA_USER'] && ENV['JIRA_PASS']
+          @uri = "#{ENV['JIRA_HOST']}/rest/api/2/issue/#{@key}/worklog"
+          sync
+        else
+          log 'Missing required env vars: JIRA_HOST, JIRA_USER, JIRA_PASS'
+        end
+      end
+
+      def log(msg)
+        puts "#{@key} | #{msg}"
       end
 
       def vars
@@ -24,12 +35,12 @@ module Xfel
       end
 
       def sync
+        log "#{@start} sync..."
         if worklogs.any? { |w| duplicated?(w) }
-          puts "Worklog started at: #{@start} already present, skipping it."
+          log "#{@start} already present, skipping it."
         else
-          puts "Syncing #{@start}..."
           res = req_for_sync
-          puts "Error: #{res.code}. #{res.body}" unless req_success(res)
+          log "#{@start} error: #{res.code}. #{res.body}" unless req_success(res)
         end
       end
 
@@ -57,17 +68,19 @@ module Xfel
         Net::HTTP.start(uri.hostname, uri.port, { use_ssl: true }) { |http| http.request(req) }
       end
 
-      def worklogs
-        return @@worklogs[@key] if @@worklogs[@key]
-
+      def fetch_worklogs
         uri = URI(@uri)
         res = execute(Net::HTTP::Get.new(uri), uri)
         unless req_success?(res)
-          puts "Can't get worklogs from: #{@uri}. #{res.code}: #{res.msg}"
+          log "Error getting worklogs. #{res.code}: #{res.msg}"
           exit
         end
-        @@worklogs[@key] = JSON.parse(res.body)['worklogs']
-        @@worklogs[@key]
+        self.class.worklogs[@key] = JSON.parse(res.body)['worklogs']
+      end
+
+      def worklogs
+        fetch_worklogs unless self.class.worklogs[@key]
+        self.class.worklogs[@key]
       end
     end
   end
