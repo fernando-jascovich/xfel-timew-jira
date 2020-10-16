@@ -40,7 +40,7 @@ module Xfel
           log "#{@start} already present, skipping it."
         else
           res = req_for_sync
-          log "#{@start} error: #{res.code}. #{res.body}" unless req_success(res)
+          log "#{@start} error: #{res.code}. #{res.body}" unless req_success?(res)
         end
       end
 

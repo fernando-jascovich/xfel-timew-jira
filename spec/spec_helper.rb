@@ -1,6 +1,14 @@
 # frozen_string_literal: true
 
 require 'bundler/setup'
+require 'simplecov'
+
+Dir['./spec/support/**/*.rb'].sort.each { |f| require f }
+
+SimpleCov.start do
+  coverage_dir '/tmp/coverage'
+  add_filter '/spec/'
+end
 
 RSpec.configure do |config|
   # Enable flags like --only-failures and --next-failure

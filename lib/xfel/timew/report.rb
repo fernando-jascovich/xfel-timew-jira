@@ -21,6 +21,10 @@ module Xfel
         table.render
       end
 
+      def task_rc
+        'rc.report.list.columns="description" rc.report.list.labels="Notes" rc.verbose=label'
+      end
+
       def read
         header_finished = false
         json_str = ''
