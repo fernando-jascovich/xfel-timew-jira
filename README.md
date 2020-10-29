@@ -14,8 +14,18 @@ echo "require 'xfel_timew_jira'" >> "$TMP_EXTENSION_FNAME"
 
 # Usage
 
+## Report only
 ```bash
 timew xfel-timew-jira
+```
+
+## Sync & report
+```bash
+XFEL_JIRA_SYNC=1 \
+  JIRA_HOST=your.jira.host.com \
+  JIRA_USER=username \
+  JIRA_PASS=password \
+  timew xfel-timew-jira
 ```
 
 # Contributing
