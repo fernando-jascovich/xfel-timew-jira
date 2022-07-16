@@ -42,7 +42,7 @@ module Xfel
         return unless tags
 
         tags.each do |x|
-          return x unless (x =~ /^[A-Z]+-[0-9]+$/).nil?
+          return x unless (x =~ /^[A-Z0-9]+-[0-9]+$/).nil?
         end
         nil
       end
