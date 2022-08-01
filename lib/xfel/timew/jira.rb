@@ -31,7 +31,7 @@ module Xfel
       end
 
       def vars
-        'notifyUsers=false&adjustEstimate=leave&overrideEditableFlag=false'
+        'notifyUsers=false&adjustEstimate=auto&overrideEditableFlag=false'
       end
 
       def sync

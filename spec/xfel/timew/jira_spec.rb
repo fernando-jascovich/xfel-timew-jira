@@ -72,7 +72,7 @@ RSpec.describe Xfel::Timew::Jira, '#vars' do
   end
 
   it 'returns a string with adjustEstimate' do
-    expect(subject).to include('adjustEstimate=leave')
+    expect(subject).to include('adjustEstimate=auto')
   end
 
   it 'returns a string with overrideEditableFlag' do
